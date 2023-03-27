@@ -1,32 +1,15 @@
 #include <stdio.h>
-#include "priority_queue.h"
-
-define_priority_queue(int);
-
-int condition(int a, int b) {
-    return a - b;
-}
-
-void show_values(priority_queue(int) pq) {
-    unsigned i;
-    for(i = 1; i <= pq.no_elements; ++i) {
-        printf("%d ", pq.values[i]);
-    }
-    puts("");
-}
+#include "huffman_compresion.h"
 
 int main() {
-    priority_queue(int) pq = new_priority_queue(int, &condition);
-    enqueue_priority_queue(pq, 1);
-    enqueue_priority_queue(pq, 2);
-    enqueue_priority_queue(pq, 3);
-    enqueue_priority_queue(pq, 4);
-    enqueue_priority_queue(pq, 5);
-    enqueue_priority_queue(pq, 6);
-    
-    printf("%d", 'Z' - 'A' + 1);
+    HUFFMAN_ENCODING huffman_encoding = initialize_huffman_encoding();
+    add_character_to_huffman_encoding(huffman_encoding, 'A', 10);
+    add_character_to_huffman_encoding(huffman_encoding, 'D', 2);
+    add_character_to_huffman_encoding(huffman_encoding, 'E', 5);
+    add_character_to_huffman_encoding(huffman_encoding, 'Z', 1);
 
+    create_encoding(huffman_encoding);
+    dealloc_huffman_encoding(huffman_encoding);
 
-    dealloc_priority_queue(pq);
     return 0;
 }

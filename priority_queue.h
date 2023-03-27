@@ -2,6 +2,8 @@
 #define PRIORITY_QUEUE_H
 
 #include <stdlib.h>
+#include <stdio.h>
+
 #define ROOT_POSITION 1
 
 void throw_error(const char *msg)
@@ -18,6 +20,7 @@ void throw_error(const char *msg)
         type (*dequeue)(struct priority_queue_##type *);                                 \
         int (*empty)(const struct priority_queue_##type);                                \
         type (*front)(const struct priority_queue_##type);                               \
+        unsigned (*size)(const struct priority_queue_##type);                            \
     } FUNCS_PRIORITY_QUEUE_##type;                                                       \
     typedef struct priority_queue_##type                                                 \
     {                                                                                    \
@@ -66,6 +69,10 @@ void throw_error(const char *msg)
     {                                                                                    \
         return pq.no_elements == 0;                                                      \
     }                                                                                    \
+    unsigned size_priority_queue_##type(const PRIORITY_QUEUE_##type pq)                  \ 
+    {                                                                                    \ 
+        return pq.no_elements;                                                           \ 
+    }                                                                                    \
     type front_priority_queue_##type(const PRIORITY_QUEUE_##type pq)                     \
     {                                                                                    \
         if (pq.funcs.empty(pq))                                                          \
@@ -75,7 +82,7 @@ void throw_error(const char *msg)
         return pq.values[1];                                                             \
     }                                                                                    \
     type dequeue_priority_queue_##type(PRIORITY_QUEUE_##type *pq)                        \
-    {                                                                                    \
+    {                                                                                    \ 
         if (pq->funcs.empty(*pq))                                                        \
         {                                                                                \
             throw_error("dequeue() called on empty priority queue");                     \
@@ -151,6 +158,7 @@ void throw_error(const char *msg)
         pq.funcs.empty = &empty_priority_queue_##type;                                   \
         pq.funcs.front = &front_priority_queue_##type;                                   \
         pq.funcs.dequeue = &dequeue_priority_queue_##type;                               \
+        pq.funcs.size = &size_priority_queue_##type;                                     \
         return pq;                                                                       \
     }
 
@@ -166,6 +174,9 @@ void throw_error(const char *msg)
 #define front_priority_queue(pq) \
     pq.funcs.front(pq)
 
+#define size_priority_queue(pq) \
+    pq.funcs.size(pq)
+
 #define enqueue_priority_queue(pq, elem) \
     pq.funcs.enqueue(&pq, elem)
 
@@ -174,4 +185,5 @@ void throw_error(const char *msg)
 
 #define dealloc_priority_queue(pq) \
     free(pq.values)
+
 #endif
